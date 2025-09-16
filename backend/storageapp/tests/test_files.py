@@ -31,7 +31,6 @@ class FileFlowTests(TestCase):
         self.alice_id = r.json()["id"]
 
     def test_upload_patch_public_download_revoke_delete(self):
-
         r = self.c.get("/files")
         assert r.status_code == 200, r.content
         assert len(r.json().get("results", [])) == 0
@@ -58,7 +57,7 @@ class FileFlowTests(TestCase):
         assert isinstance(token, str) and token
 
         anon = Client()
-        r = anon.get(f"/d/{token}")
+        r = anon.get(f"/d/{token}") 
         assert r.status_code == 200, r.status_code
         assert "attachment;" in (r.headers.get("Content-Disposition",""))
 
