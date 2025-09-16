@@ -31,12 +31,18 @@ jobs:
           --health-retries=10
 
     env:
+      # Указываем ВСЕ варианты переменных, которые проект мог читать
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/mycloud
       DB_NAME: mycloud
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_HOST: 127.0.0.1
       DB_PORT: "5432"
+      POSTGRES_DB: mycloud
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: "5432"
       SECRET_KEY: test-secret-key
       DEBUG: "1"
       PYTHONUNBUFFERED: "1"
@@ -50,10 +56,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install system deps (psycopg2, etc.)
+      - name: Install system deps (psycopg/psycopg2, psql client)
         run: |
           sudo apt-get update
-          sudo apt-get install -y libpq-dev
+          sudo apt-get install -y libpq-dev postgresql-client
 
       - name: Install Python deps
         run: |
@@ -65,21 +71,21 @@ jobs:
           elif [ -f requirements.txt ]; then
             pip install -r requirements.txt
           else
-            # минимальный набор, если файл зависимостей не найден
             pip install django psycopg2-binary
           fi
 
-      - name: Wait for Postgres
+      - name: Wait for Postgres and check connectivity
         run: |
           for i in {1..30}; do
-            if pg_isready -h localhost -p 5432 -U postgres; then
-              echo "Postgres is ready"; exit 0
+            if pg_isready -h 127.0.0.1 -p 5432 -U postgres; then
+              echo "Postgres is ready"; break
             fi
             echo "Waiting for Postgres... ($i)"; sleep 2
           done
-          echo "Postgres failed to start in time"; exit 1
+          # пробный запрос — если тут упадёт, значит не сеть Django, а сама БД недоступна
+          PGPASSWORD=postgres psql -h 127.0.0.1 -p 5432 -U postgres -d mycloud -c 'select 1;'
 
-      - name: Show env (debug)
+      - name: Show env & tree (debug)
         run: |
           echo "DB_HOST=$DB_HOST DB_PORT=$DB_PORT DB_NAME=$DB_NAME"
           ls -la backend || true
@@ -94,7 +100,6 @@ jobs:
         working-directory: backend
         run: |
           if [ ! -d "storageapp/tests" ]; then
-            echo "::error::Directory backend/storageapp/tests not found (use forward slashes)."
-            exit 1
+            echo "::error::Directory backend/storageapp/tests not found"; exit 1
           fi
           python manage.py test storageapp -v 2 --noinput
