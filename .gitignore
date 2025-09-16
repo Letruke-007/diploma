@@ -1,0 +1,60 @@
+# ======================
+# Python / Django
+# ======================
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# SQLite и локальные файлы БД
+db.sqlite3
+
+# Django collectstatic
+staticfiles/
+static/
+
+# Медиадиректория (в проде — volume)
+media/
+
+# ======================
+# Env & secrets
+# ======================
+.env
+.env.*.local
+*.env
+*.pem
+*.key
+*.crt
+
+# ======================
+# Node / Vite
+# ======================
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# ======================
+# OS / IDE / Editor
+# ======================
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ======================
+# Docker / Compose
+# ======================
+*.pid
+deploy/logs/
+deploy/media/
+
+# ======================
+# GitHub / CI
+# ======================
+# Исключим рабочие артефакты Actions
+.github/workflows/*.tmp

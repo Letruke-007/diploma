@@ -1,0 +1,17 @@
+services:
+  backend:
+    volumes:
+      - ../backend:/app/backend
+    develop:
+      watch:
+        - action: sync
+          path: ../backend
+          target: /app/backend
+        - action: rebuild
+          path: ../backend/requirements.txt;
+  publish_front:
+    image: ${COMPOSE_PROJECT_NAME:-deploy}-backend
+    entrypoint: sh -c "cp -r /srv/app/static_front/* /mnt && ls -la /mnt"
+    volumes:
+      - deploy_static_front:/mnt
+    profiles: ["ops"]

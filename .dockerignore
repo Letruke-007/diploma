@@ -1,0 +1,20 @@
+# Исключаем зависимости
+node_modules/
+backend/venv/
+__pycache__/
+*.pyc
+
+# Логи
+*.log
+
+# Сборочные артефакты
+dist/
+build/
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+
+# Docker мусор
+*.pid
