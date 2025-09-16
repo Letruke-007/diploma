@@ -43,7 +43,7 @@ jobs:
           docker compose run --rm \
             -e DJANGO_SETTINGS_MODULE=mycloud.settings.prod \
             -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
-            backend bash -lc 'mkdir -p static_front media && echo "ok"'
+            backend bash -lc 'mkdir -p /srv/app/static_front /srv/app/media && echo "ok"'
 
       - name: Make migrations (accounts, storageapp)
         working-directory: deploy
@@ -60,6 +60,14 @@ jobs:
             -e DJANGO_SETTINGS_MODULE=mycloud.settings.prod \
             -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
             backend python manage.py check
+
+      - name: Assert settings (DJANGO_SETTINGS_MODULE & AUTH_USER_MODEL)
+        working-directory: deploy
+        run: |
+          docker compose run --rm \
+            -e DJANGO_SETTINGS_MODULE=mycloud.settings.prod \
+            -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
+            backend bash -lc "python manage.py shell -c \"import django; django.setup(); from django.conf import settings; print('DJANGO_SETTINGS_MODULE =', settings.SETTINGS_MODULE); print('AUTH_USER_MODEL =', settings.AUTH_USER_MODEL)\""
 
       - name: Show migrations (debug)
         working-directory: deploy
