@@ -31,12 +31,11 @@ jobs:
           --health-retries=10
 
     env:
-      # Django/DB envs (подойдут и если проект читает DATABASE_URL, и если читает по отдельности)
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/mycloud
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/mycloud
       DB_NAME: mycloud
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_HOST: localhost
+      DB_HOST: 127.0.0.1
       DB_PORT: "5432"
       SECRET_KEY: test-secret-key
       DEBUG: "1"
