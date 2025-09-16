@@ -1,0 +1,86 @@
+name: Docker Compose CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  compose-build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Docker & Compose versions
+        run: |
+          docker --version
+          docker compose version
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Sanity - show deploy tree
+        run: |
+          echo "PWD: $PWD"
+          ls -la
+          echo "---- deploy ----"
+          ls -la deploy || true
+          test -f deploy/docker-compose.yml || (echo "::error::deploy/docker-compose.yml not found" && exit 1)
+
+      - name: Build images via compose
+        working-directory: deploy
+        run: |
+          docker compose build
+          docker compose ls
+
+      - name: Start DB and wait readiness
+        working-directory: deploy
+        run: |
+          set -e
+          docker compose up -d db
+          echo "Waiting for Postgres healthcheck…"
+          for i in {1..30}; do
+            if docker compose exec -T db pg_isready -U postgres; then
+              echo "Postgres is ready"; break
+            fi
+            echo "…still waiting ($i)"; sleep 2
+          done
+
+      - name: Prepare backend dirs (static/media) inside container
+        working-directory: deploy
+        run: |
+          docker compose run --rm \
+            -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
+            backend bash -lc 'mkdir -p static_front media && echo "ok"'
+
+      - name: Run migrations (inside backend container)
+        working-directory: deploy
+        run: |
+          docker compose run --rm \
+            -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
+            backend python manage.py migrate --noinput
+
+      - name: Run backend tests (storageapp only)
+        working-directory: deploy
+        run: |
+          docker compose run --rm \
+            -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
+            backend bash -lc '
+              if [ ! -d backend/storageapp/tests ] && [ -d storageapp/tests ]; then
+                # если рабочая директория контейнера уже backend/, используем короткий путь
+                python manage.py test storageapp -v 2 --noinput
+              else
+                # универсально
+                python manage.py test storageapp -v 2 --noinput
+              fi
+            '
+
+      - name: Compose down
+        if: always()
+        working-directory: deploy
+        run: docker compose down -v
