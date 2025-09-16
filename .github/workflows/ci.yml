@@ -7,7 +7,7 @@ on:
 
 env:
   COMPOSE_FILE: deploy/docker-compose.yml
-  DJANGO_TEST_CMD: "pytest -q"   # при желании поменяй на `python manage.py test --noinput`
+  DJANGO_TEST_CMD: "pytest -q"   # можно заменить на "python manage.py test --noinput"
 
 jobs:
   test_backend:
@@ -17,10 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Sanity: show repo and compose
+      - name: Sanity - show repo and compose
         run: |
           echo "PWD: $PWD"
           ls -la
+          echo "---- deploy ----"
           ls -la deploy || true
           test -f "$COMPOSE_FILE" || (echo "::error::File $COMPOSE_FILE not found" && exit 1)
 
@@ -39,7 +40,7 @@ jobs:
         shell: bash
         run: |
           set -e
-          # найдём, где лежат тесты (оба варианта на случай опечатки)
+          # найдём корректный путь к тестам (на случай опечатки)
           FOUND=""
           for p in backend/storageapp/tests backend/storeageapp/tests; do
             if [ -d "$p" ]; then FOUND="$p"; break; fi
