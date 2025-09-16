@@ -31,7 +31,7 @@ jobs:
           --health-retries=10
 
     env:
-      # Указываем ВСЕ варианты переменных, которые проект мог читать
+      # ВАЖНО: явно на 127.0.0.1, не localhost
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/mycloud
       DB_NAME: mycloud
       DB_USER: postgres
@@ -74,7 +74,7 @@ jobs:
             pip install django psycopg2-binary
           fi
 
-      - name: Wait for Postgres and check connectivity
+      - name: Wait for Postgres and ping
         run: |
           for i in {1..30}; do
             if pg_isready -h 127.0.0.1 -p 5432 -U postgres; then
@@ -82,15 +82,23 @@ jobs:
             fi
             echo "Waiting for Postgres... ($i)"; sleep 2
           done
-          # пробный запрос — если тут упадёт, значит не сеть Django, а сама БД недоступна
           PGPASSWORD=postgres psql -h 127.0.0.1 -p 5432 -U postgres -d mycloud -c 'select 1;'
 
-      - name: Show env & tree (debug)
+      - name: Debug tree
         run: |
-          echo "DB_HOST=$DB_HOST DB_PORT=$DB_PORT DB_NAME=$DB_NAME"
           ls -la backend || true
+          ls -la backend/accounts || true
+          ls -la backend/accounts/migrations || true
           ls -la backend/storageapp || true
+          ls -la backend/storageapp/migrations || true
           ls -la backend/storageapp/tests || true
+
+      # === КЛЮЧЕВОЕ: сначала генерим недостающие миграции, затем применяем ===
+      - name: Make migrations (accounts, storageapp)
+        working-directory: backend
+        run: |
+          python manage.py makemigrations accounts storageapp --noinput || true
+          # на случай если приложения не менялись — команда вернёт "No changes detected"
 
       - name: Migrate
         working-directory: backend
