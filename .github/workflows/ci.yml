@@ -1,121 +1,101 @@
-name: Backend tests and deploy
+name: CI (backend unit tests)
 
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
-env:
-  # Базовая команда тестов (можно заменить на manage.py test)
-  DJANGO_TEST_CMD: "pytest -q"
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test_backend:
+  backend-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+
+    services:
+      db:
+        image: postgres:15
+        env:
+          POSTGRES_DB: mycloud
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      # Django/DB envs (подойдут и если проект читает DATABASE_URL, и если читает по отдельности)
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/mycloud
+      DB_NAME: mycloud
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      SECRET_KEY: test-secret-key
+      DEBUG: "1"
+      PYTHONUNBUFFERED: "1"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Detect compose file
-        id: detect
-        shell: bash
-        run: |
-          set -e
-          echo "PWD: $PWD"
-          echo "Repo tree (top):"; ls -la
-          echo "deploy tree:"; ls -la deploy || true
-          # Пытаемся найти compose-файл по популярным путям:
-          for f in \
-            "deploy/docker-compose.yml" \
-            "deploy/docker-compose.yaml" \
-            "docker-compose.yml" \
-            "docker-compose.yaml" \
-            "compose.yml" \
-            "compose.yaml"
-          do
-            if [ -f "$f" ]; then
-              echo "FOUND_COMPOSE=$f" >> "$GITHUB_ENV"
-              echo "file=$f" >> "$GITHUB_OUTPUT"
-              echo "✔ Found compose: $f"
-              exit 0
-            fi
-          done
-          echo "::error::No docker compose file found. Put it at deploy/docker-compose.yml or adjust workflow."
-          exit 1
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Docker & Compose versions
+      - name: Install system deps (psycopg2, etc.)
         run: |
-          docker --version
-          docker compose version
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev
 
-      - name: List services and pick backend service
-        id: svc
-        shell: bash
+      - name: Install Python deps
         run: |
-          set -e
-          COMPOSE_FILE="${{ steps.detect.outputs.file }}"
-          echo "Using compose: $COMPOSE_FILE"
-          echo "All services:"
-          docker compose -f "$COMPOSE_FILE" config --services | sed 's/^/  - /'
-          CANDIDATES="backend app web django"
-          PICK=""
-          for s in $CANDIDATES; do
-            if docker compose -f "$COMPOSE_FILE" config --services | grep -Fxq "$s"; then
-              PICK="$s"; break
+          python -m pip install --upgrade pip wheel setuptools
+          if [ -f backend/requirements/prod.txt ]; then
+            pip install -r backend/requirements/prod.txt
+          elif [ -f backend/requirements.txt ]; then
+            pip install -r backend/requirements.txt
+          elif [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            # минимальный набор, если файл зависимостей не найден
+            pip install django psycopg2-binary
+          fi
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U postgres; then
+              echo "Postgres is ready"; exit 0
             fi
+            echo "Waiting for Postgres... ($i)"; sleep 2
           done
-          if [ -z "$PICK" ]; then
-            echo "::error::No backend-like service found (tried: $CANDIDATES). Rename service to 'backend' or edit workflow."
+          echo "Postgres failed to start in time"; exit 1
+
+      - name: Show env (debug)
+        run: |
+          echo "DB_HOST=$DB_HOST DB_PORT=$DB_PORT DB_NAME=$DB_NAME"
+          ls -la backend || true
+          ls -la backend/storageapp || true
+          ls -la backend/storageapp/tests || true
+
+      - name: Migrate
+        working-directory: backend
+        run: python manage.py migrate --noinput
+
+      - name: Run tests (storageapp only)
+        working-directory: backend
+        run: |
+          if [ ! -d "storageapp/tests" ]; then
+            echo "::error::Directory backend/storageapp/tests not found (use forward slashes)."
             exit 1
           fi
-          echo "Picked service: $PICK"
-          echo "SERVICE=$PICK" >> "$GITHUB_ENV"
-          echo "service=$PICK" >> "$GITHUB_OUTPUT"
-
-      - name: Build backend (and deps)
-        run: docker compose -f "${{ steps.detect.outputs.file }}" build "${{ steps.svc.outputs.service }}"
-
-      - name: Start DB (if defined)
-        run: docker compose -f "${{ steps.detect.outputs.file }}" up -d db || true
-
-      - name: Run backend tests (storageapp)
-        shell: bash
-        run: |
-          set -e
-          COMPOSE_FILE="${{ steps.detect.outputs.file }}"
-          SERVICE="${{ steps.svc.outputs.service }}"
-          # Найдём папку тестов: с правильным и с опечатанным названием
-          FOUND=""
-          for p in backend/storageapp/tests backend/storeageapp/tests; do
-            if [ -d "$p" ]; then FOUND="$p"; break; fi
-          done
-          if [ -z "$FOUND" ]; then
-            echo "::warning::Tests folder not found. Running default test command."
-            docker compose -f "$COMPOSE_FILE" run --rm "$SERVICE" bash -lc \
-              '$DJANGO_TEST_CMD || python manage.py test --noinput'
-          else
-            echo "Using tests at: $FOUND"
-            docker compose -f "$COMPOSE_FILE" run --rm "$SERVICE" bash -lc \
-              '$DJANGO_TEST_CMD "$FOUND" || python manage.py test storageapp --noinput'
-          fi
-
-  deploy:
-    needs: test_backend
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Deploy over SSH and run rebuild.sh
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script_stop: true
-          script: |
-            set -e
-            cd ~/mycloud || cd /home/${{ secrets.SSH_USER }}/mycloud
-            git pull --rebase
-            TESTS=0 ./deploy/rebuild.sh --no-cache --pull --skip-smoke
+          python manage.py test storageapp -v 2 --noinput
