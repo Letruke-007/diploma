@@ -1,12 +1,82 @@
-name: CI smoke
+name: Build, test and deploy
+
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  COMPOSE_FILE: deploy/docker-compose.yml
+  DJANGO_TEST_CMD: "pytest -q"
+  FE_DIR: "frontend"
+
 jobs:
-  smoke:
+  build_and_test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "Runner OK, workflow triggered ✅"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Enable Docker Compose v2
+        run: docker compose version
+
+      - name: Pull base images (optional)
+        run: docker pull node:20-alpine || true
+
+      - name: Build compose services
+        run: docker compose -f "$COMPOSE_FILE" build
+
+      - name: Start dependencies (db, etc)
+        run: docker compose -f "$COMPOSE_FILE" up -d db || true
+
+      - name: Run backend tests
+        run: |
+          set -e
+          docker compose -f "$COMPOSE_FILE" run --rm backend bash -lc \
+            '$DJANGO_TEST_CMD || python manage.py test --noinput'
+
+      - name: Run frontend tests
+        run: |
+          set -e
+          if [ ! -d "$FE_DIR" ] || [ ! -f "$FE_DIR/package.json" ]; then
+            echo "No frontend folder or package.json — skipping FE tests"; exit 0
+          fi
+          docker run --rm -t -v "$PWD/$FE_DIR":/app -w /app node:20-alpine sh -lc '
+            set -e
+            if [ -f pnpm-lock.yaml ]; then
+              corepack enable >/dev/null 2>&1 || true
+              pnpm install --frozen-lockfile
+              pnpm test -- --ci --run
+            elif [ -f yarn.lock ]; then
+              corepack enable >/dev/null 2>&1 || true
+              yarn install --frozen-lockfile
+              yarn test --ci
+            else
+              npm ci
+              npm test -- --ci --run
+            fi
+          '
+
+  deploy:
+    needs: build_and_test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy over SSH and run rebuild.sh
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -e
+            cd ~/mycloud || cd /home/${{ secrets.SSH_USER }}/mycloud
+            git pull --rebase
+            TESTS=0 ./deploy/rebuild.sh --no-cache --pull --skip-smoke
