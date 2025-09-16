@@ -31,50 +31,51 @@ class FileFlowTests(TestCase):
         self.alice_id = r.json()["id"]
 
     def test_upload_patch_public_download_revoke_delete(self):
-        r = self.c.get("/api/files")
+
+        r = self.c.get("/files")
         assert r.status_code == 200, r.content
         assert len(r.json().get("results", [])) == 0
 
         f = SimpleUploadedFile("hello.txt", b"hello world", content_type="text/plain")
-        r = self.c.post("/api/files", {"file": f, "comment": "greeting"})
+        r = self.c.post("/files", {"file": f, "comment": "greeting"})
         assert r.status_code == 201, r.content
         file_id = r.json()["id"]
 
-        r = self.c.get("/api/files")
+        r = self.c.get("/files")
         assert r.status_code == 200, r.content
         assert len(r.json()["results"]) == 1
 
         r = self.c.patch(
-            f"/api/files/{file_id}",
+            f"/files/{file_id}",
             data={"original_name": "hello_renamed.txt", "comment": "updated"},
             content_type="application/json",
         )
         assert r.status_code == 200, r.content
 
-        r = self.c.post(f"/api/files/{file_id}/public-link")
+        r = self.c.post(f"/files/{file_id}/public-link")
         assert r.status_code == 200, r.content
         token = r.json().get("token")
         assert isinstance(token, str) and token
 
         anon = Client()
-        r = anon.get(f"/d/{token}/")
+        r = anon.get(f"/d/{token}")
         assert r.status_code == 200, r.status_code
         assert "attachment;" in (r.headers.get("Content-Disposition",""))
 
-        r = self.c.post(f"/api/files/{file_id}/public-link/delete")
+        r = self.c.post(f"/files/{file_id}/public-link/delete")
         assert r.status_code == 200, r.content
         assert r.json().get("status") == "revoked"
 
-        r = anon.get(f"/d/{token}/")
+        r = anon.get(f"/d/{token}")
         assert r.status_code == 404
 
-        r = self.c.delete(f"/api/files/{file_id}/delete")
+        r = self.c.delete(f"/files/{file_id}/delete")
         assert r.status_code == 200, r.content
         assert r.json().get("status") == "deleted"
 
     def test_permissions_and_admin_filter(self):
         f = SimpleUploadedFile("x.txt", b"x", content_type="text/plain")
-        r = self.c.post("/api/files", {"file": f})
+        r = self.c.post("/files", {"file": f})
         assert r.status_code == 201, r.content
         fid = r.json()["id"]
 
@@ -90,13 +91,13 @@ class FileFlowTests(TestCase):
         )
         assert r.status_code == 201, r.content
 
-        r = c2.get(f"/api/files?user={self.alice_id}")
+        r = c2.get(f"/files?user={self.alice_id}")
         assert r.status_code in (401, 403)
 
         r = c2.post("/api/auth/login", {"username": "bobby", "password": "Pass12345!"})
         assert r.status_code == 200, r.content
 
-        r = c2.get(f"/api/files?user={self.alice_id}")
+        r = c2.get(f"/files?user={self.alice_id}")
         assert r.status_code == 403, r.content
 
         User.objects.create_user(
@@ -110,9 +111,9 @@ class FileFlowTests(TestCase):
         r = c3.post("/api/auth/login", {"username": "adminuser", "password": "Pass12345!"})
         assert r.status_code == 200, r.content
 
-        r = c3.get(f"/api/files?user={self.alice_id}")
+        r = c3.get(f"/files?user={self.alice_id}")
         assert r.status_code == 200, r.content
         assert any(x.get("id") == fid for x in (r.json().get("results") or []))
 
-        r = c2.delete(f"/api/files/{fid}/delete")
+        r = c2.delete(f"/files/{fid}/delete")
         assert r.status_code == 403, r.content
