@@ -32,10 +32,10 @@ jobs:
           ls -la deploy || true
           test -f deploy/docker-compose.yml || (echo "::error::deploy/docker-compose.yml not found" && exit 1)
 
-      - name: Build images via compose
+      - name: Build backend image only
         working-directory: deploy
         run: |
-          docker compose build
+          docker compose build backend
           docker compose ls
 
       - name: Start DB and wait readiness
@@ -70,15 +70,7 @@ jobs:
         run: |
           docker compose run --rm \
             -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
-            backend bash -lc '
-              if [ ! -d backend/storageapp/tests ] && [ -d storageapp/tests ]; then
-                # если рабочая директория контейнера уже backend/, используем короткий путь
-                python manage.py test storageapp -v 2 --noinput
-              else
-                # универсально
-                python manage.py test storageapp -v 2 --noinput
-              fi
-            '
+            backend bash -lc 'python manage.py test storageapp -v 2 --noinput'
 
       - name: Compose down
         if: always()
