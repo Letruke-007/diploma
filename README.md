@@ -23,7 +23,7 @@
 1. Клонировать репозиторий:
    ```bash
    git clone git@github.com:Letruke-007/diplom.git
-   cd diplom
+   cd diploma
    ```
 
 2. Создать файл окружения `.env`:
