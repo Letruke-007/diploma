@@ -58,7 +58,14 @@ jobs:
             -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
             backend bash -lc 'mkdir -p static_front media && echo "ok"'
 
-      - name: Run migrations (inside backend container)
+      - name: Make migrations (accounts, storageapp)
+        working-directory: deploy
+        run: |
+          docker compose run --rm \
+            -e DATABASE_URL="postgres://postgres:postgres@db:5432/mycloud" \
+            backend bash -lc 'python manage.py makemigrations accounts storageapp --noinput || true'
+
+      - name: Run migrations
         working-directory: deploy
         run: |
           docker compose run --rm \
