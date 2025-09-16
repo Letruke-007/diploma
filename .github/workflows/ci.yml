@@ -6,52 +6,97 @@ on:
   workflow_dispatch:
 
 env:
-  COMPOSE_FILE: deploy/docker-compose.yml
-  DJANGO_TEST_CMD: "pytest -q"   # можно заменить на "python manage.py test --noinput"
+  # Базовая команда тестов (можно заменить на manage.py test)
+  DJANGO_TEST_CMD: "pytest -q"
 
 jobs:
   test_backend:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Sanity - show repo and compose
+      - name: Detect compose file
+        id: detect
+        shell: bash
         run: |
+          set -e
           echo "PWD: $PWD"
-          ls -la
-          echo "---- deploy ----"
-          ls -la deploy || true
-          test -f "$COMPOSE_FILE" || (echo "::error::File $COMPOSE_FILE not found" && exit 1)
+          echo "Repo tree (top):"; ls -la
+          echo "deploy tree:"; ls -la deploy || true
+          # Пытаемся найти compose-файл по популярным путям:
+          for f in \
+            "deploy/docker-compose.yml" \
+            "deploy/docker-compose.yaml" \
+            "docker-compose.yml" \
+            "docker-compose.yaml" \
+            "compose.yml" \
+            "compose.yaml"
+          do
+            if [ -f "$f" ]; then
+              echo "FOUND_COMPOSE=$f" >> "$GITHUB_ENV"
+              echo "file=$f" >> "$GITHUB_OUTPUT"
+              echo "✔ Found compose: $f"
+              exit 0
+            fi
+          done
+          echo "::error::No docker compose file found. Put it at deploy/docker-compose.yml or adjust workflow."
+          exit 1
 
       - name: Docker & Compose versions
         run: |
           docker --version
           docker compose version
 
+      - name: List services and pick backend service
+        id: svc
+        shell: bash
+        run: |
+          set -e
+          COMPOSE_FILE="${{ steps.detect.outputs.file }}"
+          echo "Using compose: $COMPOSE_FILE"
+          echo "All services:"
+          docker compose -f "$COMPOSE_FILE" config --services | sed 's/^/  - /'
+          CANDIDATES="backend app web django"
+          PICK=""
+          for s in $CANDIDATES; do
+            if docker compose -f "$COMPOSE_FILE" config --services | grep -Fxq "$s"; then
+              PICK="$s"; break
+            fi
+          done
+          if [ -z "$PICK" ]; then
+            echo "::error::No backend-like service found (tried: $CANDIDATES). Rename service to 'backend' or edit workflow."
+            exit 1
+          fi
+          echo "Picked service: $PICK"
+          echo "SERVICE=$PICK" >> "$GITHUB_ENV"
+          echo "service=$PICK" >> "$GITHUB_OUTPUT"
+
       - name: Build backend (and deps)
-        run: docker compose -f "$COMPOSE_FILE" build backend
+        run: docker compose -f "${{ steps.detect.outputs.file }}" build "${{ steps.svc.outputs.service }}"
 
       - name: Start DB (if defined)
-        run: docker compose -f "$COMPOSE_FILE" up -d db || true
+        run: docker compose -f "${{ steps.detect.outputs.file }}" up -d db || true
 
       - name: Run backend tests (storageapp)
         shell: bash
         run: |
           set -e
-          # найдём корректный путь к тестам (на случай опечатки)
+          COMPOSE_FILE="${{ steps.detect.outputs.file }}"
+          SERVICE="${{ steps.svc.outputs.service }}"
+          # Найдём папку тестов: с правильным и с опечатанным названием
           FOUND=""
           for p in backend/storageapp/tests backend/storeageapp/tests; do
             if [ -d "$p" ]; then FOUND="$p"; break; fi
           done
           if [ -z "$FOUND" ]; then
-            echo "::warning::Tests folder not found. Falling back to default app runner."
-            docker compose -f "$COMPOSE_FILE" run --rm backend bash -lc \
+            echo "::warning::Tests folder not found. Running default test command."
+            docker compose -f "$COMPOSE_FILE" run --rm "$SERVICE" bash -lc \
               '$DJANGO_TEST_CMD || python manage.py test --noinput'
           else
             echo "Using tests at: $FOUND"
-            docker compose -f "$COMPOSE_FILE" run --rm backend bash -lc \
+            docker compose -f "$COMPOSE_FILE" run --rm "$SERVICE" bash -lc \
               '$DJANGO_TEST_CMD "$FOUND" || python manage.py test storageapp --noinput'
           fi
 
