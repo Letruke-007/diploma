@@ -87,8 +87,8 @@ class StoredFileModelTests(TestCase):
         User = get_user_model()
 
         user = User.objects.create_user(
-            username="u1",
-            email="u1@example.com",
+            username="user1000",
+            email="user1000@example.com",
             full_name="User One",
             password="Abcdef1!",
         )
