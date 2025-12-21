@@ -1,0 +1,96 @@
+/* ===========================
+   ADMIN USERS TABLE (visual like Files)
+   =========================== */
+
+.admin-page .table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible; 
+  position: relative;  
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-page .table-users td.col-actions {
+  position: relative;
+  overflow: visible;
+}
+
+.admin-page .actions-menu {
+  z-index: 9999;
+}
+
+.table-users {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table-users th,
+.table-users td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* Колонки через colgroup */
+.table-users col.col-id {
+  width: 70px;
+}
+
+.table-users col.col-login {
+  width: 160px;
+}
+
+.table-users col.col-name {
+  width: 220px;
+}
+
+.table-users col.col-email {
+  width: 260px;
+}
+
+.table-users col.col-admin {
+  width: 90px;
+}
+
+.table-users col.col-active {
+  width: 100px;
+}
+
+.table-users col.col-files {
+  width: 90px;
+}
+
+.table-users col.col-size {
+  width: 120px;
+}
+
+.table-users col.col-actions {
+  width: 110px;
+}
+
+/* Ячейки */
+.table-users .cell-id {
+  text-align: right;
+  color: #64748b;
+}
+
+.table-users .cell-center {
+  text-align: center;
+}
+
+.table-users .cell-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-users .cell-clip {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Подсветка выбранной строки */
+.table-users tr.row-selected td {
+  background: rgba(37, 99, 235, 0.05);
+}

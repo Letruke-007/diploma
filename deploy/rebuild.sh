@@ -165,7 +165,7 @@ for arg in "$@"; do
     --skip-migrations) SKIP_MIGRATIONS=true ;;
     --skip-prune)      SKIP_PRUNE=true ;;
     --skip-smoke)      SKIP_SMOKE=true ;;
-    --domain=*)        DOMAIN="${arg#*=}" ;|
+    --domain=*)        DOMAIN="${arg#*=}" ;;
 
     -h|--help) usage; exit 0 ;;
     *) die "Неизвестная опция: $arg (см. --help)" ;;

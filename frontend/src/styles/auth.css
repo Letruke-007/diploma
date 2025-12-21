@@ -1,0 +1,108 @@
+/* ===========================
+   AUTH PAGES (login / register)
+   =========================== */
+
+/* Контейнер всей auth-страницы */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-6) var(--space-3);
+}
+
+/* Основная карточка формы */
+.auth-box {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-6) var(--space-4);
+  text-align: left;
+}
+
+/* Заголовки */
+.auth-title {
+  margin: 0 0 var(--space-3) 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.auth-subtitle {
+  margin: 0 0 var(--space-6) 0;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* Форма */
+.auth-form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Поле */
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"] {
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:hover {
+  border-color: #cbd5e1;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+/* Текст под формой */
+.auth-help {
+  font-size: 15px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.auth-help a {
+  color: var(--brand);
+  font-weight: 500;
+}
+
+.auth-help a:hover {
+  text-decoration: underline;
+}
+
+.auth-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* Адаптив */
+@media (max-width: 480px) {
+  .auth-box {
+    padding: var(--space-4) var(--space-3);
+  }
+  .auth-title {
+    font-size: 22px;
+  }
+}

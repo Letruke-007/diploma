@@ -1,0 +1,94 @@
+/* ===========================
+   HOME PAGE
+   =========================== */
+
+/* Контейнер страницы */
+.home-page {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-6) var(--space-3);
+}
+
+/* Карточка-контейнер */
+.home-card {
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+}
+
+/* Заголовок */
+.home-title {
+  margin: 0 0 var(--space-3);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* Подзаголовок */
+.home-subtitle {
+  margin: 0 0 var(--space-6);
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+/* Блок действий */
+.home-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.home-actions .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Разделитель "или" */
+.home-or {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Логотип на главной (в стиле auth-страниц) */
+.home-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* Карточка: на Home центрируем контент (в отличие от auth, где формы слева) */
+.home-card {
+  text-align: center; /* у вас уже есть, оставляем */
+}
+
+/* Список фич */
+.home-features {
+  margin: 0 0 var(--space-6);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  text-align: left;
+}
+
+.home-features ul {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.6;
+}
+
+.home-help {
+  margin-top: var(--space-4);
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.home-help a {
+  color: var(--brand);
+  font-weight: 500;
+}
+
+.home-help a:hover {
+  text-decoration: underline;
+}

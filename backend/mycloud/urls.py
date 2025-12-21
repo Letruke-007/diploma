@@ -13,4 +13,12 @@ urlpatterns = [
 
     # Публичные ссылки типа /d/<token>
     path('d/<str:token>', public_download),
+
+    # SPA fallback: все не-API маршруты отдаём на фронт (index.html)
+    # Важно: исключаем api/, d/ и dj_admin/
+    re_path(
+        r"^(?!api/|d/|dj_admin/).*$",
+        TemplateView.as_view(template_name="index.html"),
+        name="spa-fallback",
+    ),
 ]

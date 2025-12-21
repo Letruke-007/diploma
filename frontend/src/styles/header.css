@@ -1,0 +1,81 @@
+/* ===========================
+   HEADER / TOP NAVIGATION
+   =========================== */
+
+/* Основная шапка */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Внутренний контейнер хедера */
+.header__inner {
+  max-width: 100%;
+  height: 64px;
+  margin: 0;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+/* Бренд-блок (логотип + текст) */
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand .logo svg {
+  display: block;
+}
+
+/* Обёртка логотипа */
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+/* Ссылки в хедере (отключаем подчёркивание) */
+.header a {
+  text-decoration: none;
+}
+
+.header a:hover {
+  text-decoration: none;
+}
+
+/* Контейнер для навигационных элементов справа */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Ссылки "Файлы", "Админ" и т.п. */
+.nav-link {
+  font-size: 14px;
+  color: #4b5563;
+  padding: 6px 10px;
+  border-radius: 999px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.nav-link:hover {
+  background: #eef2ff;
+  color: var(--brand);
+}
+
+/* Активный пункт навигации */
+.nav-link--active {
+  background: #e0ecff;
+  color: var(--brand);
+  font-weight: 600;
+}

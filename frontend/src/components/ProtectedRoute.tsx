@@ -1,13 +1,40 @@
 import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useMeQuery } from "../features/auth/authApi";
 
-export default function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { data: me, isLoading } = useMeQuery();
+type Props = {
+  children: ReactNode;
+  adminOnly?: boolean;
+};
+
+export default function ProtectedRoute({
+  children,
+  adminOnly = false,
+}: Props) {
+  const location = useLocation();
+  const { data: me, isLoading, isError } = useMeQuery();
+
+  if (isError || (!isLoading && !me)) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location.pathname + location.search }}
+      />
+    );
+  }
 
   if (isLoading) {
-    return <div className="panel" style={{ padding: 16 }}>Загрузка…</div>;
+    return (
+      <div className="panel" style={{ padding: 16 }}>
+        Загрузка…
+      </div>
+    );
   }
-  if (!me) return <Navigate to="/login" replace />;
+
+  if (adminOnly && !me!.is_admin) {
+    return <Navigate to="/files" replace />;
+  }
+
   return <>{children}</>;
 }

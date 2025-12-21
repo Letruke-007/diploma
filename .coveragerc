@@ -1,0 +1,21 @@
+[run]
+source =
+    backend/accounts
+    backend/storageapp
+    backend/mycloud
+omit =
+    */migrations/*
+    */tests/*
+    */__init__.py
+    */apps.py
+    */admin.py
+    backend/manage.py
+    backend/mycloud/asgi.py
+    backend/mycloud/wsgi.py
+    backend/mycloud/settings/*.py
+branch = True
+
+[report]
+show_missing = True
+skip_covered = False
+fail_under = 80

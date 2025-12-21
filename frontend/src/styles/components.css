@@ -1,0 +1,471 @@
+/* ===========================
+   COMPONENTS: PANELS / CARDS
+   =========================== */
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-4);
+}
+
+
+/* ===========================
+   COMPONENTS: FORMS & INPUTS
+   =========================== */
+
+/* Формы внутри .panel (по умолчанию вертикальный layout) */
+form.panel {
+  display: grid;
+  gap: 12px;
+}
+
+/* Лейбл + инпут столбиком */
+form.panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  color: #0b1732;
+}
+
+/* Поля ввода в форме-панели */
+form.panel input[type="text"],
+form.panel input[type="email"],
+form.panel input[type="password"] {
+  height: 38px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* Фокус и hover */
+form.panel input:hover {
+  border-color: #cbd5e1;
+}
+form.panel input:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+/* Базовое поле ввода (общий utility-класс) */
+.input {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(17, 79, 255, 0.12);
+}
+
+.input--comment {
+  max-width: 460px;
+  background: #fafcff;
+}
+
+.input--comment::placeholder {
+  color: #9aa4b2;
+}
+
+/* Обёртка и подпись к полю */
+.input-wrap {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+
+.input-hint {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Ошибки */
+.form-error {
+  color: var(--danger);
+  font-size: 13px;
+  background: #fdecec;
+  border: 1px solid #f7c2cc;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+
+.error.form-error {
+  margin-top: -4px;
+}
+
+/* Чекбоксы */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+
+/* ===========================
+   COMPONENTS: BUTTONS
+   =========================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--brand);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.02s ease;
+  user-select: none;
+  
+}
+
+/* Общие состояния для button и .btn */
+button:hover,
+.btn:hover {
+  background: var(--brand-hover);
+}
+
+button:active,
+.btn:active {
+  transform: translateY(1px);
+}
+
+button:disabled,
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Варианты кнопок */
+.btn--ghost {
+  background: #fff;
+  color: #0b1732;
+  border: 1px solid var(--border-strong);
+}
+
+.btn--ghost:hover {
+  background: #f8fafc;
+}
+
+.btn--secondary {
+  color: #111827;
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.btn--secondary:hover {
+  background: #e0e7ff;
+}
+
+.btn--danger {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.btn--danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Кнопка после кнопки — небольшой сдвиг */
+.btn + .btn {
+  margin-left: 8px;
+}
+
+/* Кнопки-ссылки: без подчёркивания при hover */
+.btn,
+.btn:hover,
+.btn:focus,
+.btn:active {
+  text-decoration: none;
+}
+
+/* ===========================
+   COMPONENTS: ICONS & ICON BUTTONS
+   =========================== */
+
+/* Базовая SVG-иконка */
+.icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  fill: currentColor;
+  overflow: visible;
+}
+
+/* Кнопка-иконка (квадратная, компактная) */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #4b5563;
+  border-radius: 6px;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease,
+    transform 0.05s ease;
+}
+
+.icon-button:hover:not(:disabled) {
+  background: #e5e7eb;
+  color: var(--brand);
+}
+
+.icon-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Акцентная кнопка (например, скачать) */
+.icon-button--accent {
+  color: var(--brand);
+}
+
+.icon-button--accent:hover:not(:disabled) {
+  background: #e0e7ff;
+  color: var(--brand);
+}
+
+/* Опасное действие (удалить и т.п.) */
+.icon-button--danger {
+  color: var(--danger);
+}
+
+.icon-button--danger:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--danger);
+}
+
+/* Группа иконок в одном ряду */
+.icon-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Базовая круглая иконка */
+.icon-circle-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+/* Вариант для панели выбора */
+.icon-circle-btn--selection {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+
+  color: #4b5563; /* нейтральный серый */
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+}
+
+/* Обычный hover: мягкая синяя подсветка в логике всей страницы */
+.icon-circle-btn--selection:hover:not(:disabled) {
+  background-color: #dbeafe;  /* голубой фон */
+  color: #2563eb;             /* синий акцент */
+  transform: scale(1.05);
+}
+
+/* "Опасные" действия (корзина / удалить навсегда) */
+.icon-circle-btn--selection.icon-circle-btn--danger:hover:not(:disabled) {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Disabled-состояние */
+.icon-circle-btn--selection:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+
+/* SVG внутри */
+.selection-icon-svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Текст только для скринридеров (используется в SelectionActionButton) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ===========================
+   COMPONENTS: BASE TABLES
+   =========================== */
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background: var(--panel);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+thead th {
+  background: var(--table-head);
+  font-weight: 600;
+  color: #111827;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-strong);
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tbody tr:hover {
+  background: #f8fbff;
+}
+
+
+/* ===========================
+   COMPONENTS: PAGINATION
+   =========================== */
+
+/* Контейнер пагинации под таблицами/списками */
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Кнопки пагинации в виде круглых иконок */
+.pagination-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: #4b5563;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.02s ease;
+}
+
+.pagination-btn:hover:enabled {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: var(--brand);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+.pagination-btn:active:enabled {
+  transform: translateY(1px);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+
+/* ===========================
+   COMPONENTS: INLINE EDIT
+   =========================== */
+
+/* Редактирование имени/комментария в строке */
+.edit-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.edit-input {
+  flex: 1;
+  min-width: 260px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+.comment-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

@@ -1,60 +1,130 @@
-# ======================
+# ==================================================
 # Python / Django
-# ======================
+# ==================================================
 __pycache__/
+**/__pycache__/
 *.py[cod]
+*.pyo
+
+# virtualenvs
+.venv/
+venv/
+ENV/
+env/
+backend/venv/
+backend/.venv/
+
+# python build artifacts
 *.egg-info/
 .eggs/
+*.egg
+*.whl
+build/
+dist/
+
+# tests / coverage
 .pytest_cache/
 .coverage
+coverage/
 htmlcov/
+.tox/
+
+# logs
 *.log
 
-# SQLite и локальные файлы БД
+# databases
 db.sqlite3
+*.sqlite3
 
-# Django collectstatic
+# Django runtime
 staticfiles/
 static/
-
-# Медиадиректория (в проде — volume)
 media/
+backend/media/
 
-# ======================
-# Env & secrets
-# ======================
+# ==================================================
+# Environment / secrets
+# ==================================================
 .env
-.env.*.local
+.env.*
 *.env
+.envrc
+
 *.pem
 *.key
 *.crt
 
-# ======================
-# Node / Vite
-# ======================
+# ==================================================
+# Frontend (Node / Vite / React)
+# ==================================================
+node_modules/
 frontend/node_modules/
+
+dist/
 frontend/dist/
+
+.vite/
 frontend/.vite/
+frontend/.vite-temp/
+
+coverage/
 frontend/coverage/
+.nyc_output/
 
-# ======================
-# OS / IDE / Editor
-# ======================
-.DS_Store
-.idea/
-.vscode/
-*.swp
-
-# ======================
-# Docker / Compose
-# ======================
+# ==================================================
+# Docker / Deploy
+# ==================================================
 *.pid
+*.pid.lock
+*.sock
+
 deploy/logs/
 deploy/media/
 
-# ======================
-# GitHub / CI
-# ======================
-# Исключим рабочие артефакты Actions
+# docker volumes / runtime data
+deploy/postgres_data/
+deploy/pgdata/
+deploy/redis_data/
+deploy/certbot/
+deploy/nginx/cache/
+deploy/nginx/logs/
+
+# ==================================================
+# Archives / dumps
+# ==================================================
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.rar
+*.dump
+*.bak
+*.old
+*.tmp
+
+# ==================================================
+# OS / IDE / Editors
+# ==================================================
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.lnk
+
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ==================================================
+# Local scripts / misc
+# ==================================================
+*.local.sh
+*.local.ps1
+
+# ==================================================
+# Git
+# ==================================================
 .github/workflows/*.tmp
+# accidental / local
+..venvScriptsActivate
+diploma_repo/

@@ -1,0 +1,2048 @@
+/* ===========================
+   FILES PAGE: LAYOUT
+   =========================== */
+
+/* Общий контейнер страницы файлов */
+.files-page {
+  margin-top: 0;
+  display: grid;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Обёртка: сайдбар + основная часть */
+.files-layout {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  width: 100%;
+}
+
+/* ---------- Sidebar ---------- */
+
+.files-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #f8fafc;
+  padding: 16px 12px 20px;
+  border-right: 1px solid var(--border);
+}
+
+/* Обёртка для кнопки "+ Создать" и меню */
+.sidebar-create-wrapper {
+  position: relative;
+}
+
+/* Кнопка "+ Создать" в сайдбаре */
+.sidebar-create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+
+  width: 100%;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+
+  border-radius: 999px;
+  border: none;
+
+  background-color: #2563eb;      /* насыщенный синий */
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.08s ease;
+}
+
+/* Hover/active */
+.sidebar-create-btn:hover {
+  background-color: #1d4ed8;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+  transform: translateY(-1px);
+}
+
+.sidebar-create-btn:active {
+  background-color: #1e40af;
+  box-shadow: 0 3px 8px rgba(30, 64, 175, 0.6);
+  transform: translateY(0);
+}
+
+/* Кружок с плюсом слева */
+.sidebar-create-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Сам плюс */
+.sidebar-create-btn-icon-svg {
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
+}
+
+/* Выпадающее меню */
+.sidebar-create-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  width: 220px;
+
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+  padding: 4px 0;
+  z-index: 50;
+}
+
+/* Пункт меню */
+.sidebar-create-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+  padding: 8px 12px;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  font-size: 14px;
+  line-height: 1.25;
+  color: #111827;
+  text-align: left;
+}
+
+.sidebar-create-menu-item:hover {
+  background-color: #f3f4ff;
+}
+
+/* Иконка в пункте меню */
+.sidebar-create-menu-icon {
+  width: 18px;
+  height: 18px;
+  color: #4b5563;
+}
+
+/* ===========================
+   CREATE FOLDER POPOVER
+   =========================== */
+
+.create-folder-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 260px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+  padding: 10px;
+  z-index: 60;
+}
+
+.create-folder-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.create-folder-input {
+  width: 100%;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 0 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.create-folder-input:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.create-folder-error {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+.create-folder-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Обёртка верхней части (логотип + кнопка + навигация) */
+.sidebar-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Логотип MyCloud, выровнен как у облачных сервисов */
+.sidebar-logo {
+  padding: 4px 8px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-logo svg {
+  display: block;
+  width: 160px;
+  height: auto;
+}
+
+/* Кнопка "Загрузить" в сайдбаре */
+.sidebar-upload-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  cursor: pointer;
+  background: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.02s ease;
+}
+
+.sidebar-upload-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.09);
+}
+
+.sidebar-upload-btn:active {
+  transform: translateY(1px);
+}
+
+.sidebar-upload-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-upload-icon-svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar-upload-label {
+  white-space: nowrap;
+}
+
+/* Навигация в сайдбаре */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.sidebar-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #4b5563;
+  text-align: left;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.sidebar-nav-item:hover:not(:disabled) {
+  background: #eef2ff;
+  color: var(--brand);
+}
+
+.sidebar-nav-item--active {
+  background: #e8f0fe;
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.sidebar-nav-item:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* Иконка слева у пункта меню */
+.sidebar-nav-icon-wrapper {
+  width: 20px;       
+  flex: 0 0 20px;    
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.sidebar-nav-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  color: #4b5563;
+}
+
+.sidebar-nav-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Стрелка раскрытия "Мой диск" */
+.sidebar-nav-caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 4px;
+}
+
+.sidebar-nav-caret-icon {
+  width: 14px;
+  height: 14px;
+  transform-origin: center;
+  transition: transform 0.12s ease;
+}
+
+.sidebar-nav-item--open .sidebar-nav-caret-icon {
+  transform: rotate(90deg);
+}
+
+/* Подменю (папки внутри "Мой диск") */
+.sidebar-subnav {
+  margin-left: 34px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-subnav-item {
+  border: none;
+  background: transparent;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  cursor: default;
+}
+
+.sidebar-subnav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #d1d5db;
+}
+
+.sidebar-subnav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Блок квоты внизу сайдбара */
+.sidebar-quota {
+  margin-top: 24px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.sidebar-quota-text {
+  margin-bottom: 6px;
+  color: #4b5563;
+}
+
+.sidebar-quota-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.sidebar-quota-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  width: 0;
+  transition: width 0.25s ease-out;
+}
+
+/* ---------- Responsive sidebar & layout ---------- */
+
+@media (max-width: 900px) {
+  .files-layout {
+    flex-direction: column;
+  }
+
+  .files-sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .sidebar-main {
+    flex: 1;
+  }
+
+  .sidebar-quota {
+    max-width: 260px;
+  }
+}
+
+
+/* ===========================
+   FILES PAGE: MAIN AREA
+   =========================== */
+
+.files-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 16px 32px;
+  max-width: 1600px;
+  margin: 0 auto;
+  background: #ffffff;
+}
+
+/* Хедер основной области (Мой диск + кнопки) */
+.files-main-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.files-main-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Breadcrumbs row (как в Drive) */
+.files-breadcrumb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 22px;
+}
+
+.files-nav-buttons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.files-nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: #fff;
+  color: #4b5563;
+  cursor: pointer;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.files-nav-btn:hover:enabled {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+
+.files-nav-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
+.files-breadcrumbs--title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 24px;        /* как был h1 */
+  font-weight: 500;
+  line-height: 1.2;
+  color: #111827;
+  gap: 0;
+}
+
+.files-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.files-breadcrumb-sep {
+  margin: 0 10px;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.files-breadcrumb-link {
+  border: none;
+  background: transparent;
+  padding: 2px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #1f2937;
+  font: inherit;
+  max-width: 360px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.files-breadcrumb-link:hover {
+  background: #f3f4f6;
+}
+
+.files-breadcrumb-current {
+  font-weight: 600;
+  color: #111827;
+  padding: 2px 4px;
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.files-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.files-main-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.files-main-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===========================
+   TOP-RIGHT ACTION BUTTONS (Upload / Refresh)
+   =========================== */
+
+.files-main-actions .icon-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.files-main-actions .icon-circle-btn:hover:enabled {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+.files-main-actions .icon-circle-btn:active:enabled {
+  transform: translateY(1px);
+}
+
+.files-main-actions .icon-circle-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* Primary upload */
+.files-main-actions .icon-circle-btn--primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  box-shadow: 0 6px 16px rgba(0, 97, 255, 0.28);
+}
+
+.files-main-actions .icon-circle-btn--primary:hover:enabled {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+  box-shadow: 0 8px 20px rgba(0, 97, 255, 0.35);
+}
+
+/* Secondary refresh (без акцента) */
+.files-main-actions .icon-circle-btn--secondary {
+  background: #ffffff;
+}
+
+/* Символы внутри */
+.files-main-actions .icon-circle-symbol {
+  font-size: 18px;
+  line-height: 1;
+  color: #374151;
+  user-select: none;
+}
+
+/* Плюс крупнее и белый */
+.files-main-actions .icon-circle-btn--primary .icon-circle-symbol {
+  color: #ffffff;
+}
+
+.files-main-actions .icon-circle-symbol--plus {
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: -1px;
+}
+
+.files-main-actions .icon-circle-svg {
+  width: 18px;
+  height: 18px;
+  color: #374151;
+}
+
+.files-main-actions .icon-circle-svg--spin {
+  animation: mcSpin 0.9s linear infinite;
+}
+
+@keyframes mcSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Верхний топбар внутри Files: вкладка "Файлы" + кнопка "Выход" */
+.files-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.files-topbar-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: #4b5563;
+  background: transparent;
+}
+
+.files-topbar-tab--active {
+  background: #e8f0fe;
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.files-topbar-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.files-topbar-logout-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+
+/* Круглые иконки в правом верхнем углу (используют .icon-circle-btn из components.css) */
+.icon-circle-symbol {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Панель при просмотре чужого хранилища */
+.files-foreign {
+  padding: 12px 16px;
+  background: #fff7e6;
+  border-left: 4px solid #f5a623;
+}
+
+/* ============================================================
+   Upload inline panel (Drive-like, stable)
+   ============================================================ */
+
+.files-upload-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px auto;
+  gap: 12px;
+
+  padding: 8px 12px;
+  margin-bottom: 12px;
+
+  border-radius: var(--radius);
+  background: #fafafa;
+  border: 1px solid var(--border-strong);
+
+  align-items: start; /* критично: кнопка не центрируется по высоте списка */
+}
+
+/* ---------- LEFT: list + progress ---------- */
+
+.files-upload-left {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.files-upload-selected {
+  min-width: 0;
+}
+
+/* список — единственное место со скроллом */
+.files-upload-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  max-height: 96px;          /* компактно и UX-дружелюбно */
+  overflow-y: auto;
+}
+
+/* ---------- FILE ITEM ---------- */
+
+.files-upload-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.files-upload-item:hover {
+  background: #f3f4f6;
+}
+
+.files-upload-item-name {
+  flex: 1;
+  min-width: 0;              /* ОБЯЗАТЕЛЬНО для ellipsis */
+  font-size: 13px;
+  color: #111827;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.files-upload-remove {
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.files-upload-remove:hover {
+  color: #ef4444;
+}
+
+/* ---------- PROGRESS ---------- */
+
+.files-upload-progress {
+  margin-top: 8px;
+}
+
+.files-upload-progress-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.files-upload-progress-fill {
+  height: 100%;
+  background: var(--brand);
+  transition: width 0.2s ease;
+}
+
+.files-upload-progress-text {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* ---------- COMMENT ---------- */
+
+.files-upload-comment {
+  width: 260px;
+  max-width: 260px;
+  height: 32px;
+
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+
+  font-size: 13px;
+  align-self: start;
+}
+
+.files-upload-comment:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25);
+}
+
+/* ---------- SUBMIT ---------- */
+
+.files-upload-submit {
+  align-self: start;
+  white-space: nowrap;
+}
+
+/* ---------- ADAPTIVE ---------- */
+
+@media (max-width: 820px) {
+  .files-upload-inline {
+    grid-template-columns: 1fr;
+  }
+
+  .files-upload-comment {
+    width: 100%;
+    max-width: none;
+  }
+
+  .files-upload-submit {
+    justify-self: end;
+  }
+}
+
+/* ===========================
+   FILE LIST PANEL & EMPTY STATE
+   =========================== */
+
+/* Область списка файлов — без карточки, как в Google Drive */
+.files-list-panel {
+  display: block;
+  margin-top: 8px;
+}
+
+/* Жёстко перекрываем базовый .panel,
+   даже если components.css подключён позже */
+.files-main .panel.files-list-panel {
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Пустое состояние таблицы */
+.files-empty-state {
+  padding: 32px 8px;
+  text-align: center;
+}
+
+.files-empty-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.files-empty-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+
+/* ===========================
+   FILE NAME & COMMENT INLINE UI
+   =========================== */
+
+/* Имя файла с иконкой типа */
+.file-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.file-name-main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.name-text {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Кликабельное имя файла (редактирование по клику) */
+.name-inline-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.name-inline-btn:disabled {
+  cursor: default;
+}
+
+.name-inline-btn:hover .name-text {
+  text-decoration: underline;
+}
+
+/* Кликабельный комментарий */
+.comment-inline-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.comment-inline-btn:disabled {
+  cursor: default;
+}
+
+.comment-inline-btn:hover .comment-text {
+  text-decoration: underline;
+}
+
+
+/* ===========================
+   ACTIONS MENU (троеточие)
+   =========================== */
+
+/* Обертка для троеточия и выпадающего меню */
+.actions-menu-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Само меню */
+.actions-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  min-width: 220px;
+  padding: 4px 0;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+  z-index: 20;
+}
+
+.actions-menu--fixed {
+  position: fixed;
+  right: auto;
+  margin-top: 0;
+  z-index: 1300;
+}
+
+/* Пункты меню */
+.actions-menu-item {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.actions-menu-item:hover:enabled {
+  background: #f3f4f6;
+}
+
+.actions-menu-item:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.actions-menu-item--danger {
+  color: #dc2626;
+}
+
+.actions-menu-item--danger:hover:enabled {
+  background: rgba(220, 38, 38, 0.06);
+}
+
+
+/* ===========================
+   FILES TABLE (.table-files)
+   =========================== */
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible; 
+  position: relative; 
+}
+
+.table-files {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+
+  /* переопределяем глобальные стили table из components.css */
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+
+.table-files thead th.is-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.table-files thead th.is-sortable:hover {
+  background: #f3f4f6;
+}
+
+.table-files .sort-indicator {
+  margin-left: 6px;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+/* Заголовок таблицы */
+.table-files thead th {
+  padding: 8px 12px;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: #f9fafb;
+  /* Заголовкам разрешаем перенос, чтобы они не "наезжали" */
+  white-space: normal;
+  word-break: break-word;
+  hyphens: auto;
+  line-height: 1.15;
+}
+
+/* Ячейки тела таблицы */
+.table-files tbody td {
+  vertical-align: middle;
+  overflow: hidden;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+/* Строки: легкий ховер + выбранная строка */
+.table-files tbody tr {
+  transition: background 0.12s ease;
+}
+
+/* Строка не выделена → делаем светло-серую заливку */
+.table-files tbody tr:not(.row-selected):hover {
+  background-color: #f2f3f5; /* мягкий светло-серый */
+}
+
+.table-files tr.row-selected {
+  background-color: #bfdbfe; /* основной голубой */
+}
+
+/* Выделенная строка → hover делает её немного насыщеннее */
+.table-files tr.row-selected:hover {
+  background-color: #b3d3fd; /* на 10% темнее → явный отклик */
+}
+
+/* Узкий чекбокс */
+.table-files th.col-select,
+.table-files td.col-select {
+  width: 44px;
+  padding-left: 8px;
+  padding-right: 8px;
+  text-align: center;
+}
+
+/* Колонка имени файла занимает всё свободное место */
+.table-files th.col-name,
+.table-files td.col-name {
+  width: auto;
+}
+
+/* Имя файла: обрезка по ширине */
+.table-files td.col-name {
+  overflow: hidden;
+}
+
+/* Размер */
+.table-files th.col-size,
+.table-files td.col-size {
+  width: 96px;
+  min-width: 96px;
+  max-width: 96px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Даты (загрузка / скачивание) */
+.table-files th.col-up,
+.table-files td.col-up,
+.table-files th.col-down,
+.table-files td.col-down {
+  width: 160px;
+  min-width: 160px;
+  max-width: 160px;
+  text-align: center;
+}
+
+/* Дата удаления (корзина) */
+.table-files th.col-deleted,
+.table-files td.col-deleted {
+  width: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  text-align: center;
+}
+
+/* Исходное местоположение (корзина) */
+.table-files th.col-origin,
+.table-files td.col-origin {
+  width: 240px;
+  min-width: 200px;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-files .dt {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+}
+
+.table-files .dt-date {
+  font-size: 12px;
+  font-weight: 400;
+  color: #374151;  
+}
+
+.table-files .dt-time {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ca3af;  }
+
+/* Публичная ссылка и действия */
+.table-files th.col-link,
+.table-files td.col-link {
+  width: 160px;
+  min-width: 140px;
+  text-align: center;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.table-files th.col-actions,
+.table-files td.col-actions {
+  width: 90px;
+  min-width: 90px;
+  max-width: 90px;
+  text-align: center;
+}
+
+
+/* Комментарий */
+.table-files th.col-comment,
+.table-files td.col-comment {
+  width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-files td.col-comment .comment-text {
+  display: inline-block;
+  max-width: 100ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* Иконки внутри табличных ячеек */
+.table-files td.col-link .icon,
+.table-files td.col-actions .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.table-files td.col-link .icon-button,
+.table-files td.col-actions .icon-button {
+  width: 24px;
+  height: 24px;
+  color: #64748b;
+}
+
+.table-files td.col-actions .icon-button.icon-button--download:hover {
+  color: var(--success);
+}
+
+.table-files td.col-actions .icon-button.icon-button--danger:hover {
+  color: var(--danger);
+}
+
+/* Публичная ссылка как иконка: серый → синий при наведении */
+.table-files td.col-link :is(.icon-button, .btn) {
+  border: none !important;
+  background: transparent !important;
+  color: #7a869a;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  line-height: 0;
+}
+
+.table-files td.col-link :is(.icon-button, .btn):hover {
+  color: var(--brand) !important;
+}
+
+.table-files td.col-link :is(.icon-button, .btn) .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Центровка ряда колонок */
+.table-files th.col-size,
+.table-files td.col-size,
+.table-files th.col-up,
+.table-files td.col-up,
+.table-files th.col-down,
+.table-files td.col-down,
+.table-files th.col-link,
+.table-files td.col-link {
+  text-align: center;
+}
+
+.table-files .file-actions button:hover svg {
+  color: #1e40af;
+  background-color: rgba(37, 99, 235, 0.08);
+  border-radius: 6px;
+}
+
+   /* Дата удаления (корзина) */
+.table-files th.col-deleted,
+.table-files td.col-deleted {
+  width: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  text-align: center;
+}
+
+/* Исходное местоположение (корзина) */
+.table-files th.col-origin,
+.table-files td.col-origin {
+  width: 240px;
+  min-width: 200px;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-files td.col-actions {
+  position: relative;
+  overflow: visible;
+}
+
+.actions-menu {
+  z-index: 9999;
+}
+
+/* ===== "Up one level" row (..), like classic file managers ===== */
+.table-files tbody tr.row-up {
+  background: transparent;
+}
+
+.table-files tbody tr.row-up:hover {
+  background-color: #f3f4f6;
+}
+
+.table-files tbody tr.row-up td {
+  font-size: 14px;
+  color: #374151;
+}
+
+.row-up-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.row-up-text {
+  color: #111827;
+}
+
+
+/* ===========================
+   FILE TYPE ICONS (микро-иконка)
+   =========================== */
+
+/* Мини-иконка файла по мотивам облачных сервисов
+   (фоновый квадрат + цветная полоска внизу в зависимости от типа) */
+.file-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Внутренняя "страничка" */
+.file-icon::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 2px;
+  background: #ffffff;
+}
+
+/* Цветная полоска снизу, зависящая от типа файла */
+.file-icon::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  height: 4px;
+  border-radius: 1.5px;
+  background: #9ca3af; /* default */
+}
+
+.file-icon--doc::after {
+  background: #2563eb; /* синий */
+}
+
+.file-icon--sheet::after {
+  background: #059669; /* зелёный */
+}
+
+.file-icon--pdf::after {
+  background: #dc2626; /* красный */
+}
+
+.file-icon--image::after {
+  background: #7c3aed; /* фиолетовый */
+}
+
+.file-icon--archive::after {
+  background: #f97316; /* оранжевый */
+}
+
+.file-icon--other::after {
+  background: #6b7280;
+}
+
+.file-type-icon {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.file-type-icon svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+
+/* ===========================
+   UPLOAD DROPZONE
+   =========================== */
+
+/* Drag & Drop зона (используется UploadForm) */
+.dropzone {
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 32px 40px;
+  text-align: left;
+  cursor: pointer;
+  background: #fafbfd;
+  color: var(--muted);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropzone:hover {
+  background: #f1f5ff;
+  border-color: var(--brand);
+}
+
+.dropzone--hover {
+  background: #e8f0ff !important;
+  border-color: var(--brand) !important;
+}
+
+.dropzone--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Внутреннее содержимое dropzone */
+.dz-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 520px;
+}
+
+.dz-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #eef2ff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.dz-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dz-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.dz-subtitle {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.dz-subtitle--filename {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Немного приводим зону дропа к центру в карточке */
+.upload-card .dz-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+/* Адаптив для dropzone */
+@media (max-width: 640px) {
+  .dropzone {
+    padding: 20px;
+  }
+
+  .dz-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .dz-icon {
+    margin-bottom: 4px;
+  }
+}
+
+
+/* ===========================
+   RIGHT UPLOAD SIDEBAR
+   =========================== */
+
+.upload-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 260px;
+  background: linear-gradient(180deg, #f0f7ff 0%, #e6f0ff 100%);
+  box-shadow: -6px 0 20px rgba(0, 0, 0, 0.06);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 50;
+}
+
+.upload-sidebar .title {
+  font-weight: 600;
+}
+
+.upload-sidebar .row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.upload-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #60a5fa;
+  border-top-color: transparent;
+  animation: files-spinner-spin 0.8s linear infinite;
+}
+
+/* СЛОТ: всегда есть, фиксирует место, но НЕ рисует плашку */
+.files-selection-bar {
+  position: sticky;
+  top: 88px;
+  z-index: 30;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 14px;
+  line-height: 20px;
+
+  width: 100%;
+  margin: 8px 0 10px 0;
+
+  height: 44px;
+
+  /* важно: в базовом состоянии НЕТ плашки */
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+  border-radius: 999px;
+}
+
+/* IDLE: ничего не рисуем, просто держим высоту */
+.files-selection-bar--idle {
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* SELECTED: рисуем плашку и делаем лёгкую анимацию */
+.files-selection-bar--selected {
+  padding: 0 18px;
+  background-color: #f6f9ff; /* чуть светлее */
+  border-color: #dbe8ff;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
+
+  /* чтобы кнопки не терялись справа */
+  justify-content: flex-start;
+
+  animation: filesSelectionIn 140ms ease-out;
+}
+
+/* кнопки действий ближе к тексту */
+.files-selection-bar--selected .files-selection-actions {
+  margin-left: 18px;
+}
+
+@keyframes filesSelectionIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.files-type-filter-btn[aria-expanded="true"] {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  filter: none;
+}
+
+/* Левая часть панели */
+.files-selection-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Текст выбранных объектов */
+.files-selection-summary {
+  font-size: 13px;
+  line-height: 1.25;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+/* Иконки справа */
+.files-selection-actions,
+.files-selection-actions--icons {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.files-selection-summary {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.files-selection-actions {
+  font-size: 14px;
+}
+
+.files-selection-actions button {
+  font-size: 14px;
+}
+
+/* Фильтр "Тип" (как чип) */
+.files-type-filter {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.files-type-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  background-color: #f5f7fa;  
+  color: #1f2937;             
+  border: 1px solid #e5e7eb;    
+}
+
+.files-type-filter-btn:hover {
+  filter: brightness(0.98);
+  background-color: #eef2f7;
+  color: #1f2937;
+}
+
+.files-type-filter-btn[aria-expanded="true"] {
+  background-color: #e9eef5;
+  color: #1f2937;
+}
+
+.files-type-filter-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.files-type-filter-title {
+  font-weight: 600;
+}
+
+.files-type-filter-value {
+  opacity: 0.85;
+}
+
+.files-type-filter-caret {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+/* Выпадающее меню */
+.files-type-filter-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  z-index: 50;
+}
+
+.files-type-filter-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  align-items: center;      
+  gap: 12px;                
+  line-height: 1;  
+  display: flex;       
+}
+
+.files-type-filter-item:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.files-type-filter-item.is-active {
+  background: rgba(59, 130, 246, 0.14);
+  font-weight: 600;
+}
+
+/* Тост внизу справа */
+.files-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+  font-size: 14px;
+  z-index: 60;
+}
+
+.files-toast--info {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+}
+
+.files-empty-action {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d0d7e2;
+  background: #fff;
+  cursor: pointer;
+}
+
+.files-empty-action:hover {
+  background: #f6f8fb;
+}
+
+@keyframes files-spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.actions-menu-trigger-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.actions-menu-item-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+/* overlay для закрытия по клику вне */
+.mc-popover-overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 1200;
+}
+
+/* popover */
+.mc-popover {
+  position: fixed;
+  width: 360px;
+  max-width: calc(100vw - 24px);
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  border-radius: 14px;
+  box-shadow: 0 18px 60px rgba(17, 24, 39, 0.20);
+  overflow: hidden;
+  font-size: 13px;
+  color: #111827;
+}
+
+/* маленькая “стрелка” сверху (как у меню) */
+.mc-popover::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 26px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-left: 1px solid rgba(17, 24, 39, 0.10);
+  border-top: 1px solid rgba(17, 24, 39, 0.10);
+  transform: rotate(45deg);
+}
+
+.mc-popover__header {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.mc-popover__title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.mc-popover__close {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  font-size: 18px;
+  line-height: 1;
+  color: #374151;
+}
+.mc-popover__close:hover {
+  background: rgba(17, 24, 39, 0.06);
+}
+
+.mc-popover__path {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.mc-popover__crumbs {
+  font-size: 12px;
+  color: #4b5563;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mc-popover__body {
+  padding: 10px 10px 8px;
+}
+
+.mc-popover__list {
+  max-height: 280px;
+  overflow: auto;
+  padding: 2px;
+}
+
+/* строка папки */
+.mc-popover__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+}
+.mc-popover__row:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.mc-popover__open {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+.mc-popover__open:hover {
+  background: rgba(17, 24, 39, 0.06);
+}
+
+.mc-popover__name {
+  flex: 1;
+  text-align: left;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 10px;
+  color: #111827;
+}
+.mc-popover__name.is-selected {
+  background: rgba(59, 130, 246, 0.14);
+  font-weight: 600;
+}
+
+/* footer */
+.mc-popover__footer {
+  padding: 12px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-top: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.mc-popover__spacer {
+  flex: 1;
+}
+
+/* базовые кнопки, если у вас нет своих mc-btn */
+.mc-btn {
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  background: #fff;
+  color: #111827;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.mc-btn:hover {
+  background: rgba(17, 24, 39, 0.04);
+}
+.mc-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mc-btn--ghost {
+  background: #fff;
+}
+
+.mc-btn--primary {
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.92);
+  color: #fff;
+}
+.mc-btn--primary:hover {
+  background: rgba(59, 130, 246, 1);
+}
+
+.mc-muted {
+  color: #6b7280;
+  padding: 8px 10px;
+}
+
+.mc-link {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #2563eb;
+  padding: 0;
+  font: inherit;
+}
+.mc-link:hover {
+  text-decoration: underline;
+}
+
+
+.selection-action-wrap {
+  display: inline-flex;
+}
+
+.mc-popover__search {
+  padding: 2px 4px 10px;
+}
+
+.mc-popover__searchInput {
+  width: 100%;
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  border-radius: 10px;
+  padding: 9px 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+.mc-popover__searchInput:focus {
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* Hover по строке: делаем читаемый текст на синем фоне */
+.mc-popover__row:hover .mc-popover__name {
+  color: #ffffff;
+}
+
+/* если у вас иконка/кнопка слева должна тоже “светлеть” */
+.mc-popover__row:hover .mc-popover__open {
+  color: #ffffff;
+}

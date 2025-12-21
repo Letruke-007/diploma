@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-from datetime import timedelta
+
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
@@ -8,7 +8,12 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    h.strip() for h in os.environ.get("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()
+    h.strip()
+    for h in os.environ.get(
+        "ALLOWED_HOSTS",
+        "localhost,127.0.0.1",
+    ).split(",")
+    if h.strip()
 ]
 
 INSTALLED_APPS = [
@@ -71,12 +76,12 @@ TIME_ZONE = "Europe/Istanbul"
 USE_I18N = True
 USE_TZ = True
 
-# Статика
+# ---- Static files ----
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "backend" / "static"
 STATICFILES_DIRS = [BASE_DIR / "static_front"]
 
-# Медиа
+# ---- Media files ----
 MEDIA_ROOT = os.environ.get("MEDIA_ROOT", str(BASE_DIR / "media"))
 MEDIA_URL = "/media/"
 
@@ -89,9 +94,55 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
 
-# Лимиты загрузки
-MAX_UPLOAD_MB = int(os.environ.get("MAX_UPLOAD_MB", "2048"))  # 2 ГБ по умолчанию
-FILE_UPLOAD_MAX_MEMORY_SIZE = 8 * 1024 * 1024   # 8 MB — крупные файлы во временный файл
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB
+# ---- Upload limits ----
+MAX_UPLOAD_MB = int(os.environ.get("MAX_UPLOAD_MB", "2048"))  # 2 GB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 8 * 1024 * 1024    # 8 MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10 MB
+
+# ---- Storage quota per user ----
+USER_QUOTA_GB = int(os.environ.get("USER_QUOTA_GB", "5"))
+USER_QUOTA_BYTES = USER_QUOTA_GB * 1024 * 1024 * 1024
+
+# ---- Logging ----
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {
+            "format": "[{asctime}] {levelname:<8} {name}: {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "accounts": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "storageapp": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

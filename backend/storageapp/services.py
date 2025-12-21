@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from .models import StoredFile
 
+
 # Жёсткий лимит размера файла: 2 ГБ
 MAX_FILE_BYTES = 2 * 1024 * 1024 * 1024  # 2 GiB
 
@@ -20,19 +21,28 @@ def ensure_user_storage_dir(user) -> Path:
     Возвращает абсолютный путь на диске.
     """
     base = Path(settings.MEDIA_ROOT)
+
     if not getattr(user, "storage_rel_path", None):
         user.storage_rel_path = f"u/{user.username[:2].lower()}/{user.username}"
         user.save(update_fields=["storage_rel_path"])
+
     path = base / user.storage_rel_path
     path.mkdir(parents=True, exist_ok=True)
     return path
 
 
-def save_uploaded(django_file, user, comment: str = "") -> StoredFile:
+def save_uploaded(
+    django_file,
+    user,
+    comment: str = "",
+    parent: StoredFile | None = None,
+) -> StoredFile:
     """
     Сохраняет загружаемый файл на диск и создаёт StoredFile.
-    Пишет через временный файл с последующей атомарной заменой.
-    Применяет лимит 2 ГБ: проверяет заранее (если известен size) и в процессе записи.
+
+    - Пишет через временный файл с последующей атомарной заменой.
+    - Применяет лимит 2 ГБ: проверяет заранее и в процессе записи.
+    - parent: папка (StoredFile) или None. Должен быть уже провалидирован во views.py.
     """
     size: Optional[int] = getattr(django_file, "size", None)
     if size is not None and size > MAX_FILE_BYTES:
@@ -47,10 +57,10 @@ def save_uploaded(django_file, user, comment: str = "") -> StoredFile:
         size=size or 0,
         comment=comment,
         uploaded_at=timezone.now(),
+        parent=parent,
     )
     sf.save()
 
-    # Подкаталог по первым двум символам UUID
     subdir = user_dir / str(sf.disk_name)[:2]
     subdir.mkdir(parents=True, exist_ok=True)
 
@@ -75,9 +85,8 @@ def save_uploaded(django_file, user, comment: str = "") -> StoredFile:
                     raise ValueError("File too large (max 2GB)")
                 out.write(chunk)
 
-        os.replace(tmp, dst)  # атомарная замена
+        os.replace(tmp, dst)
     except Exception:
-        # При любой ошибке — подчистим временный файл и БД-запись
         try:
             if tmp.exists():
                 tmp.unlink()
@@ -89,14 +98,12 @@ def save_uploaded(django_file, user, comment: str = "") -> StoredFile:
             pass
         raise
     finally:
-        # На случай редких гонок — дополнительная уборка tmp
         try:
             if tmp.exists():
                 tmp.unlink()
         except Exception:
             pass
 
-    # Финальный размер по факту записи
     try:
         sf.size = dst.stat().st_size
         sf.save(update_fields=["size"])
@@ -108,16 +115,20 @@ def save_uploaded(django_file, user, comment: str = "") -> StoredFile:
 
 def delete_stored_file(sf: StoredFile) -> None:
     """
-    Удаляет файл на диске (если есть) и запись из БД.
-    Ошибки файловой системы не валят процесс.
+    Удаляет физический файл и (если объект сохранён в БД) удаляет запись.
+    Ошибки файловой системы игнорируются.
     """
     try:
         path = Path(settings.MEDIA_ROOT) / sf.rel_path
-        if path.is_file():
-            path.unlink()
+        path.unlink(missing_ok=True)
     except Exception:
         pass
-    sf.delete()
+
+    if sf.pk is not None:
+        try:
+            sf.delete()
+        except Exception:
+            pass
 
 
 def issue_public_link(sf: StoredFile) -> str:
