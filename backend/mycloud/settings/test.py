@@ -1,4 +1,7 @@
-from .base import *
+from .base import *  # noqa
+
+from pathlib import Path
+import tempfile
 
 
 DATABASES = {
@@ -14,6 +17,11 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 DEBUG = True
+
+# В тестах (и особенно в CI) гарантируем writable MEDIA_ROOT
+# GitHub Actions runner не даст писать в "/" (как раз то, что ломало тесты).
+MEDIA_ROOT = Path(tempfile.gettempdir()) / "mycloud_test_media"
+MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
 
 LOGGING["root"]["level"] = "DEBUG"
 LOGGING["loggers"]["accounts"]["level"] = "DEBUG"

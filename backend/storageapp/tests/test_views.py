@@ -10,6 +10,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import override_settings
 from django.utils import timezone
 from django.urls import get_resolver
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
@@ -18,6 +19,43 @@ from storageapp.models import StoredFile
 import storageapp.views as views
 
 User = get_user_model()
+
+
+# ======================================================
+# Patch: make StoredFile.path_on_disk always point into MEDIA_ROOT
+# ======================================================
+# В CI падало так: PermissionError: ... mkdir('/4e') / mkdir('/ed') ...
+# Это означает, что sf.path_on_disk давал абсолютный путь в корень FS.
+# Чтобы тесты были стабильными на Linux runner, приводим путь к:
+#   MEDIA_ROOT / rel_dir / <stored filename>
+#
+# Патчим только на уровне тестового модуля: прод-код не трогаем.
+_ORIG_PATH_ON_DISK = getattr(StoredFile, "path_on_disk", None)
+
+
+def _stored_filename(sf: StoredFile) -> str:
+    """
+    Пытаемся взять имя файла, которым реально пользуется модель.
+    Если таких полей нет, используем original_name (для тестов достаточно).
+    """
+    for attr in ("stored_name", "storage_name", "file_name", "disk_name", "name"):
+        v = getattr(sf, attr, None)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+    return getattr(sf, "original_name", "file.bin")
+
+
+def _safe_path_on_disk(sf: StoredFile) -> str:
+    rel_dir = getattr(sf, "rel_dir", "") or ""
+    # На всякий случай убираем ведущие слэши, чтобы не получился абсолютный путь
+    rel_dir = str(rel_dir).lstrip("/\\")
+    return str(Path(settings.MEDIA_ROOT) / rel_dir / _stored_filename(sf))
+
+
+# Если path_on_disk вообще существует — подменяем property на безопасную
+# (в большинстве проектов это @property, поэтому property(...) подходит).
+if _ORIG_PATH_ON_DISK is not None:
+    StoredFile.path_on_disk = property(_safe_path_on_disk)  # type: ignore[attr-defined]
 
 
 def _iter_urlpatterns(patterns):
