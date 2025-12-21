@@ -1,3 +1,6 @@
+[![CI (tests)](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml/badge.svg)](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml)
+
+
 # MyCloud — дипломный проект (Fullstack Python)
 
 ## Описание проекта
@@ -63,7 +66,7 @@
 
 ### Тестирование
 - Django test runner (backend)
-- Jest / Testing Library (frontend)
+- Jest / Testing Library / Vitest (frontend)
 
 ---
 
@@ -148,13 +151,15 @@ docker compose up --build
 
 ### Backend
 В проекте реализованы автоматические тесты backend-части
-(модели, API, permissions, бизнес-логика).
+(модели, сериализаторы, API, permissions и бизнес-логика).
 
-Тесты запускаются в контейнерном окружении и используются
-в процессе автоматической проверки проекта.
+**Все backend-тесты успешно проходят** в контейнерном окружении,
+используемом для разработки и проверки проекта.
 
 ### Frontend
 Во frontend-части присутствуют тесты компонентов и пользовательских сценариев.
+
+**Все frontend-тесты успешно проходят** на текущем состоянии проекта.
 
 Запуск:
 ```bash
@@ -206,7 +211,7 @@ npm test
 - API:  
   https://my-cloud-diploma.ru/api/
 - Административный интерфейс Django:  
-  https://my-cloud-diploma.ru/admin/
+  https://my-cloud-diploma.ru/dj_admin/
 
 ---
 
@@ -215,4 +220,5 @@ npm test
 - Тип проекта: **дипломный проект**
 - Назначение: учебный / портфолио
 - Реализован обязательный функционал согласно требованиям задания
+- Все автоматические тесты проекта проходят успешно
 - Развёртывание воспроизводимо по README.md и deploy-скриптам
