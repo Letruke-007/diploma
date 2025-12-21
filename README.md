@@ -207,10 +207,8 @@ npm test
 
 - Главная страница:  
   https://my-cloud-diploma.ru
-- API:  
-  https://my-cloud-diploma.ru/api/
-- Административный интерфейс Django:  
-  https://my-cloud-diploma.ru/dj_admin/
+- Админка:
+  https://my-cloud-diploma.ru/admin/
 
 ---
 
