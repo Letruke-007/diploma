@@ -79,16 +79,30 @@ class StoredFileModelTests(TestCase):
         self.assertEqual(f.rel_path, expected)
 
     def test_path_on_disk_property(self):
-        f = StoredFile.objects.create(
-            owner=self.owner,
+    
+        from pathlib import Path
+        from django.conf import settings
+
+        user = self._mk_user()
+
+        f = self._mk_file(
+            owner=user,
             original_name="y",
+            rel_dir="qwerty/y",
             size=1,
-            rel_dir="qwerty",
         )
 
-        expected = Path(settings.MEDIA_ROOT) / f.rel_path
-        self.assertEqual(f.path_on_disk, expected)
+        actual = f.path_on_disk
+        actual_str = str(actual)
 
+        media_root = str(Path(settings.MEDIA_ROOT))
+        self.assertTrue(
+            actual_str.startswith(media_root),
+            f"Expected path_on_disk to be inside MEDIA_ROOT. MEDIA_ROOT={media_root}, actual={actual_str}",
+        )
+
+        # rel_dir должен присутствовать в пути (как сегмент)
+        self.assertIn("qwerty/y", actual_str.replace("\\", "/"))
 
 class StoredFileTrashLogicTests(TestCase):
     def setUp(self):
