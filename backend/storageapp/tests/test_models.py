@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
+
 from storageapp.models import StoredFile
 
 User = get_user_model()
@@ -79,30 +80,36 @@ class StoredFileModelTests(TestCase):
         self.assertEqual(f.rel_path, expected)
 
     def test_path_on_disk_property(self):
-    
         from pathlib import Path
         from django.conf import settings
+        from django.contrib.auth import get_user_model
 
-        user = self._mk_user()
+        User = get_user_model()
 
-        f = self._mk_file(
+        user = User.objects.create_user(
+            username="u1",
+            email="u1@example.com",
+            full_name="User One",
+            password="Abcdef1!",
+        )
+
+        # Важно: size должен быть задан, иначе в CI/PG может быть NOT NULL
+        f = StoredFile.objects.create(
             owner=user,
             original_name="y",
+            is_folder=False,
             rel_dir="qwerty/y",
             size=1,
         )
 
-        actual = f.path_on_disk
-        actual_str = str(actual)
+        actual = str(f.path_on_disk).replace("\\", "/")
+        media_root = str(Path(settings.MEDIA_ROOT)).replace("\\", "/")
 
-        media_root = str(Path(settings.MEDIA_ROOT))
         self.assertTrue(
-            actual_str.startswith(media_root),
-            f"Expected path_on_disk to be inside MEDIA_ROOT. MEDIA_ROOT={media_root}, actual={actual_str}",
+            actual.startswith(media_root),
+            f"path_on_disk should be inside MEDIA_ROOT. MEDIA_ROOT={media_root}, actual={actual}",
         )
-
-        # rel_dir должен присутствовать в пути (как сегмент)
-        self.assertIn("qwerty/y", actual_str.replace("\\", "/"))
+        self.assertIn("qwerty/y", actual)
 
 class StoredFileTrashLogicTests(TestCase):
     def setUp(self):
