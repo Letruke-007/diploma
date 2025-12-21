@@ -1,5 +1,4 @@
-[![CI (tests)](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml/badge.svg)](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml)
-
+[![CI](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml)
 
 # MyCloud — дипломный проект (Fullstack Python)
 
