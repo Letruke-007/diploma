@@ -1,4 +1,4 @@
-[![CI (backend + frontend tests)](https://github.com/Letruke-007/diploma/actions/workflows/ci.yml/badge.svg)](https://github.com/Letruke-007/diploma/actions/workflows/ci.yml)
+[![CI](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Letruke-007/diplom/actions/workflows/ci.yml)
 
 # MyCloud — дипломный проект (Fullstack Python)
 
@@ -80,6 +80,34 @@ my-cloud/
 ├── deploy_full_stack.sh    # Скрипт полного деплоя (frontend + backend)
 └── README.md
 ```
+
+---
+
+## Демо-доступ (для проверки проекта)
+
+Для проверки функциональности в развёрнутом приложении
+созданы тестовые пользователи.
+
+### Обычные пользователи
+| Логин     | Роль  |
+|----------|-------|
+| Alexey   | User  |
+| Andrey  | User  |
+| Dmitriy | User  |
+
+### Администратор
+| Логин         | Роль          |
+|---------------|---------------|
+| Administrator | Superuser     |
+
+**Пароль для всех пользователей:**
+
+```
+Qwerty123!
+```
+
+> Данные учётные записи предназначены исключительно для демонстрации
+> и используются только в рамках дипломного проекта.
 
 ---
 
@@ -207,8 +235,10 @@ npm test
 
 - Главная страница:  
   https://my-cloud-diploma.ru
-- Админка:
-  https://my-cloud-diploma.ru/admin/
+- API:  
+  https://my-cloud-diploma.ru/api/
+- Административный интерфейс Django:  
+  https://my-cloud-diploma.ru/dj_admin/
 
 ---
 
