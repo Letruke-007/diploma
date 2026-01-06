@@ -1,251 +1,109 @@
-[![CI (backend + frontend tests)](https://github.com/Letruke-007/diploma/actions/workflows/ci.yml/badge.svg)](https://github.com/Letruke-007/diploma/actions/workflows/ci.yml)
+[![CI (backend + frontend
+tests)](https://github.com/Letruke-007/diploma/actions/workflows/ci.yml/badge.svg)](https://github.com/Letruke-007/diploma/actions/workflows/ci.yml)
 
-# MyCloud — дипломный проект (Fullstack Python)
+# MyCloud --- Full-Stack File Storage Web Application
 
-## Описание проекта
+## Project Overview
 
-**MyCloud** — веб-приложение облачного хранилища файлов, разработанное в рамках дипломного проекта
-по профессии «Fullstack-разработчик на Python».
+**MyCloud** is a full-stack web application for file storage and
+sharing, developed as a diploma / portfolio project for the *Full-Stack
+Python Developer* program.
 
-Приложение позволяет пользователям регистрироваться и аутентифицироваться,
-загружать и управлять файлами, а также предоставлять доступ к ним по публичным ссылкам.
-Администратор имеет расширенные права управления пользователями и их файловыми хранилищами.
+The application allows users to register and authenticate, upload and
+manage files, organize them into folders, and share files via public
+links.\
+Administrators have extended permissions to manage users and access all
+user storages.
 
-Проект реализован как единое fullstack-приложение с backend на Django и frontend в формате SPA
-на React. Развёртывание выполняется в Docker-окружении и воспроизводимо на VPS
-(платформа reg.ru) с помощью deploy-скриптов.
+The project is implemented as a single full-stack system with a
+**Django-based backend** and a **React SPA frontend**.\
+Deployment is containerized with Docker and fully reproducible on a VPS
+environment using deployment scripts.
 
----
+------------------------------------------------------------------------
 
-## Архитектура проекта
+## Project Architecture
 
-Проект организован как **монорепозиторий** и состоит из трёх логических частей.
+The project is organized as a **monorepository** and consists of three
+logical parts.
 
 ### Backend
-- Django + Django REST Framework
-- Session-based authentication
-- REST API для фронтенда
-- Хранение файлов на диске сервера
-- PostgreSQL в качестве основной базы данных
+
+-   Django + Django REST Framework
+-   Session-based authentication
+-   REST API for frontend interaction
+-   Server-side file storage
+-   PostgreSQL as the primary database
 
 ### Frontend
-- SPA (Single Page Application) на React
-- React Router для маршрутизации
-- Redux Toolkit для управления состоянием
-- Весь пользовательский интерфейс работает без перезагрузки страницы
+
+-   Single Page Application (SPA) built with React
+-   React Router for client-side routing
+-   Redux Toolkit for state management
+-   Fully dynamic UI without page reloads
 
 ### Deployment / Infrastructure
-- Docker и Docker Compose
-- Backend, Nginx и PostgreSQL запускаются в контейнерах
-- Frontend собирается локально и подключается к Nginx как готовый `dist`
-- Деплой воспроизводим и автоматизирован скриптами
 
----
+-   Docker and Docker Compose
+-   Backend, Nginx, and PostgreSQL run in containers
+-   Frontend is built locally and served by Nginx as a static `dist`
+-   Deployment is automated and reproducible using shell scripts
 
-## Стек технологий
+------------------------------------------------------------------------
 
-### Backend
-- Python 3.12+
-- Django
-- Django REST Framework
-- PostgreSQL
-
-### Frontend
-- React 18
-- React Router v6
-- Redux Toolkit
-- Vite
-- TypeScript
-
-### Инфраструктура
-- Docker
-- Docker Compose
-- Nginx
-- VPS (reg.ru)
-
-### Тестирование
-- Django test runner (backend)
-- Jest / Testing Library / Vitest (frontend)
-
----
-
-## Структура репозитория
-
-```
-my-cloud/
-├── backend/                # Django backend (API, модели, бизнес-логика)
-├── frontend/               # React SPA
-├── deploy/                 # Docker Compose, nginx, env-файлы
-├── deploy_frontend.sh      # Скрипт деплоя frontend
-├── deploy_full_stack.sh    # Скрипт полного деплоя (frontend + backend)
-└── README.md
-```
-
----
-
-## Демо-доступ (для проверки проекта)
-
-Для проверки функциональности в развёрнутом приложении
-созданы тестовые пользователи.
-
-### Обычные пользователи
-| Логин     | Роль  |
-|----------|-------|
-| Alexey   | User  |
-| Andrey  | User  |
-| Dmitriy | User  |
-
-### Администратор
-| Логин         | Роль          |
-|---------------|---------------|
-| Administrator | Superuser     |
-
-**Пароль для всех пользователей:**
-
-```
-Qwerty123!
-```
-
-> Данные учётные записи предназначены исключительно для демонстрации
-> и используются только в рамках дипломного проекта.
-
----
-
-## Backend: функциональность
-
-### Аутентификация и пользователи
-- регистрация пользователя;
-- вход / выход;
-- получение профиля текущего пользователя;
-- разграничение ролей (user / admin).
-
-### Административный интерфейс
-- список пользователей;
-- изменение прав пользователя;
-- удаление пользователей;
-- доступ администратора к хранилищам всех пользователей.
-
-### Файловое хранилище
-- загрузка файлов;
-- создание папок;
-- переименование и изменение комментариев;
-- удаление (soft-delete, корзина);
-- восстановление файлов;
-- массовые операции с файлами;
-- скачивание файлов;
-- генерация публичных ссылок;
-- скачивание файлов по публичной ссылке.
-
-Файлы хранятся на диске сервера под уникальными именами,
-метаданные файлов сохраняются в базе данных.
-
----
-
-## Frontend: пользовательский интерфейс
-
-- Главная страница (лендинг)
-- Регистрация и аутентификация
-- Личное файловое хранилище
-- Корзина
-- Административный интерфейс (для пользователей с правами администратора)
-
-Интерфейс реализован как SPA.
-Backend отдаёт `index.html` для всех не-API маршрутов.
-
----
-
-## Локальный запуск (development)
-
-### Требования
-- Docker
-- Docker Compose
-- Node.js (только для сборки frontend)
-
-### Запуск backend и инфраструктуры
-
-```bash
-cd deploy
-docker compose up --build
-```
-
-После запуска:
-- API доступно по адресу `http://localhost`
-- Django admin доступен по `/dj_admin/`
-
----
-
-## Тестирование
+## Technology Stack
 
 ### Backend
-В проекте реализованы автоматические тесты backend-части
-(модели, сериализаторы, API, permissions и бизнес-логика).
 
-**Все backend-тесты успешно проходят** в контейнерном окружении,
-используемом для разработки и проверки проекта.
+-   Python 3.12+
+-   Django
+-   Django REST Framework
+-   PostgreSQL
 
 ### Frontend
-Во frontend-части присутствуют тесты компонентов и пользовательских сценариев.
 
-**Все frontend-тесты успешно проходят** на текущем состоянии проекта.
+-   React 18
+-   React Router v6
+-   Redux Toolkit
+-   Vite
+-   TypeScript
 
-Запуск:
-```bash
-cd frontend
-npm test
-```
+### Infrastructure
 
----
+-   Docker
+-   Docker Compose
+-   Nginx
+-   VPS (reg.ru)
 
-## Deployment (VPS / reg.ru)
+### Testing
 
-Проект развёртывается на VPS с использованием Docker Compose.
+-   Django test runner (backend)
+-   Jest / Testing Library / Vitest (frontend)
 
-### Деплой frontend (отдельно)
+------------------------------------------------------------------------
 
-```bash
-./deploy_frontend.sh
-```
+## Repository Structure
 
-Скрипт:
-- собирает frontend локально;
-- передаёт готовый `dist` на сервер;
-- подключает frontend к Nginx без сборки на сервере.
+    my-cloud/
+    ├── backend/
+    ├── frontend/
+    ├── deploy/
+    ├── deploy_frontend.sh
+    ├── deploy_full_stack.sh
+    └── README.md
 
-### Полный деплой (frontend + backend)
+------------------------------------------------------------------------
 
-```bash
-./deploy_full_stack.sh
-```
+## Demo Access
 
-Скрипт выполняет:
-1. локальную сборку frontend;
-2. доставку frontend-артефактов на сервер;
-3. синхронизацию backend-кода;
-4. пересборку и перезапуск контейнеров;
-5. выполнение миграций;
-6. проверку корректности обновления.
+For demonstration purposes, test accounts are available.
 
-Деплой полностью воспроизводим и не требует ручных операций.
+**Password for all accounts:**
 
----
+    Qwerty123!
 
-## Демонстрация
+------------------------------------------------------------------------
 
-Проект развёрнут на VPS reg.ru и доступен онлайн.
+## Live Demo
 
-- Главная страница:  
-  https://my-cloud-diploma.ru
-- API:  
-  https://my-cloud-diploma.ru/api/
-- Административный интерфейс Django:  
-  https://my-cloud-diploma.ru/dj_admin/
-
----
-
-## Статус проекта
-
-- Тип проекта: **дипломный проект**
-- Назначение: учебный / портфолио
-- Реализован обязательный функционал согласно требованиям задания
-- Все автоматические тесты проекта проходят успешно
-- Развёртывание воспроизводимо по README.md и deploy-скриптам
+-   https://my-cloud-diploma.ru
